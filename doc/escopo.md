@@ -5,6 +5,8 @@
 * **A Tese do Augmentation:** O uso de dados sintéticos (CTGAN) permite que uma base pequena (500 contatos) atinja o "volume crítico" necessário para treinar uma inteligência que entenda o comportamento de consumo, sem esperar anos para coletar dados organicamente.
 * **Inteligência Orgânica vs. Gestor de Tráfego:** Contratar um gestor de tráfego profissional é um investimento alto para quem está começando. Este modelo permite uma abordagem "orgânica preditiva": em vez de gastar fortunas em anúncios genéricos, a empresa usa o modelo para minerar sua própria base e leads de entrada, priorizando o esforço humano onde a conversão é estatisticamente provável.
 
+* **Objetivo:** Modelo de IA preditivo para ranqueamento e auxilio no funil de vendas de forma organica (sem custo).
+
 ## 1. Preparação e Limpeza (Data Wrangling)
 * **Tratamento do CSV:** Normalização de datas, padronização de nomes de cidades e encoding de variáveis categóricas.
 * **Feature Engineering:** Criação de métricas como "Dias de Base" e "Score de Localização".
