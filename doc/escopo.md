@@ -48,3 +48,7 @@
     * **How:** Pipeline de MLOps para retreino periódico conforme novos dados de e-commerce entram no sistema.
     * **Why:** O sistema se torna um ativo próprio da empresa, crescendo em inteligência de forma orgânica e sustentável.
     * **Who:** MLOps Engineer.
+
+## Links Importantes: 
+* **[Diário de Campo](https://docs.google.com/document/d/1ih6E6COIQu2aeYMDbqwOS-i7yrnrcU6J/edit?usp=sharing&ouid=107711076338632138849&rtpof=true&sd=true)**
+* **[Formulário 1](https://docs.google.com/document/d/1iwNhJhuzP_f5tDFqQ8AqIIx_kFouta5QNZ0FoHyQCT0/edit?usp=sharing)**
