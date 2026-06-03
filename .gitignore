@@ -1,0 +1,20 @@
+# Dependencias
+node_modules/
+
+# Builds do frontend
+frontend/dist/
+frontend/.vite/
+
+# Banco SQLite local (fora do Docker) e artefatos do Prisma
+*.db
+*.db-journal
+*.db-shm
+*.db-wal
+api/src/generated/
+
+# Ambiente
+.env
+
+# SO / editores
+.DS_Store
+*.log
