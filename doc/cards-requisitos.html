@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cards de requisitos</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --paper: #F4F1E9;
+      --card: #FFFFFF;
+      --card-2: #FBF9F4;
+      --ink: #1B1A16;
+      --ink-soft: #56524A;
+      --ink-faint: #908B7E;
+      --line: rgba(27, 26, 22, .10);
+      --line-2: rgba(27, 26, 22, .18);
+      --accent: #155E50;
+      --ess-bg: #F8E7E0;
+      --ess-fg: #7A2D17;
+      --imp-bg: #F7EBD3;
+      --imp-fg: #5E3606;
+      --des-bg: #E4EEF8;
+      --des-fg: #0E4373;
+      --sans: 'IBM Plex Sans', sans-serif;
+      --mono: 'IBM Plex Mono', monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      margin: 0;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: var(--sans);
+      font-size: 16px;
+      line-height: 1.65;
+      background-image: radial-gradient(circle at 1px 1px, rgba(27, 26, 22, .045) 1px, transparent 0);
+      background-size: 22px 22px;
+    }
+
+    .wrap {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 40px 28px 80px;
+    }
+
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      font-size: 13.5px;
+      color: var(--ink-soft);
+      margin: 0 0 26px;
+    }
+
+    .badge {
+      font-family: var(--mono);
+      font-size: 11.5px;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      padding: 4px 11px;
+      border-radius: 5px;
+      font-weight: 500;
+      white-space: nowrap;
+    }
+
+    .b-ess {
+      background: var(--ess-bg);
+      color: var(--ess-fg);
+    }
+
+    .b-imp {
+      background: var(--imp-bg);
+      color: var(--imp-fg);
+    }
+
+    .b-des {
+      background: var(--des-bg);
+      color: var(--des-fg);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 16px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line-2);
+      border-radius: 14px;
+      padding: 20px 22px 22px;
+      opacity: 0;
+      transform: translateY(10px);
+      animation: rise .5s ease forwards;
+    }
+
+    .card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .rid {
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--ink-faint);
+      letter-spacing: .03em;
+    }
+
+    .card h3 {
+      font-family: var(--sans);
+      font-weight: 600;
+      font-size: 17.5px;
+      line-height: 1.25;
+      margin: 0 0 11px;
+    }
+
+    .desc {
+      font-size: 14.5px;
+      color: var(--ink);
+      margin: 0 0 15px;
+    }
+
+    .field {
+      margin-top: 13px;
+    }
+
+    .field-label {
+      font-family: var(--mono);
+      font-size: 10.5px;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--ink-faint);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 3px;
+    }
+
+    .field-label svg {
+      width: 13px;
+      height: 13px;
+    }
+
+    .l-val {
+      color: var(--accent);
+    }
+
+    .l-att {
+      color: #A8590E;
+    }
+
+    .field p {
+      margin: 0;
+      font-size: 13.5px;
+      line-height: 1.55;
+      color: var(--ink-soft);
+    }
+
+    code {
+      font-family: var(--mono);
+      font-size: .88em;
+      background: var(--card-2);
+      border: 1px solid var(--line);
+      padding: 1px 5px;
+      border-radius: 4px;
+      color: var(--ink);
+    }
+
+    @keyframes rise {
+      to {
+        opacity: 1;
+        transform: none;
+      }
+    }
+
+    @media (max-width:560px) {
+      .wrap {
+        padding: 28px 18px 60px;
+      }
+
+      .grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media print {
+      body {
+        background: #fff;
+      }
+
+      .card {
+        break-inside: avoid;
+        animation: none;
+        opacity: 1;
+        transform: none;
+      }
+
+      .badge {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+
+    <div class="legend">
+      <span>Importância:</span>
+      <span class="badge b-ess">Essencial</span>
+      <span class="badge b-imp">Importante</span>
+      <span class="badge b-des">Desejável</span>
+    </div>
+
+    <div class="grid">
+
+      <div class="card" style="animation-delay:.03s">
+        <div class="card-top"><span class="rid">RF1</span><span class="badge b-ess">Essencial</span></div>
+        <h3>Cadastro com especificações técnicas</h3>
+        <p class="desc">Formulário para registrar um produto com modelo, armazenamento, RAM, slots de expansão, marcas
+          de uso e
+          saúde da bateria, se utilizar checkbox melhor ainda etc.</p>
+        <div class="field">
+          <div class="field-label l-val"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="20 6 9 17 4 12" />
+            </svg>Como validar</div>
+          <p>Submeter um cadastro completo e confirmar que todos os campos foram gravados no banco.</p>
+        </div>
+        <div class="field">
+          <div class="field-label l-att"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z" />
+              <line x1="12" y1="9" x2="12" y2="13" />
+              <line x1="12" y1="17" x2="12" y2="17" />
+            </svg>Atenção</div>
+          <p>Definir campos obrigatórios vs opcionais — exemplo modelo é obrigatório.</p>
+        </div>
+      </div>
+
+      <div class="card" style="animation-delay:.06s">
+        <div class="card-top"><span class="rid">RF2</span><span class="badge b-ess">Essencial</span></div>
+        <h3>Anexo de fotos</h3>
+        <p class="desc">Permitir anexar uma ou mais fotos ao produto durante o cadastro.</p>
+        <div class="field">
+          <div class="field-label l-val"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="20 6 9 17 4 12" />
+            </svg>Como validar</div>
+          <p>Anexar imagens, salvar e confirmar que aparecem na tela de consulta.</p>
+        </div>
+        <div class="field">
+          <div class="field-label l-att"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z" />
+              <line x1="12" y1="9" x2="12" y2="13" />
+              <line x1="12" y1="17" x2="12" y2="17" />
+            </svg>Atenção</div>
+          <p>Definir formatos aceitos (jpg/png), tamanho máximo e quantidade de fotos por produto.</p>
+        </div>
+      </div>
+
+      <div class="card" style="animation-delay:.09s">
+        <div class="card-top"><span class="rid">RF3</span><span class="badge b-ess">Essencial</span></div>
+        <h3>Persistência dos dados</h3>
+        <p class="desc">Gravar os dados do produto de forma durável no SQLite.</p>
+        <div class="field">
+          <div class="field-label l-val"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="20 6 9 17 4 12" />
+            </svg>Como validar</div>
+          <p>Reiniciar a aplicação e verificar que os produtos cadastrados continuam disponíveis.</p>
+        </div>
+        <div class="field">
+          <div class="field-label l-att"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z" />
+              <line x1="12" y1="9" x2="12" y2="13" />
+              <line x1="12" y1="17" x2="12" y2="17" />
+            </svg>Atenção</div>
+          <p>O SQLite é arquivo único — guardar em volume Docker para não perder os dados ao recriar o container.</p>
+        </div>
+      </div>
+
+      <div class="card" style="animation-delay:.12s">
+        <div class="card-top"><span class="rid">RF4</span><span class="badge b-ess">Essencial</span></div>
+        <h3>Geração de QR Code</h3>
+        <p class="desc">Ao salvar, gerar um QR Code apontando para a URL única do produto: <code>/produtos/:id</code>.
+        </p>
+        <div class="field">
+          <div class="field-label l-val"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="20 6 9 17 4 12" />
+            </svg>Como validar</div>
+          <p>Escanear o QR com o celular e confirmar que abre a tela de consulta correta.</p>
+        </div>
+        <div class="field">
+          <div class="field-label l-att"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z" />
+              <line x1="12" y1="9" x2="12" y2="13" />
+              <line x1="12" y1="17" x2="12" y2="17" />
+            </svg>Atenção</div>
+          <p>Tudo é local: o QR deve usar o <b>IP da máquina na rede</b> (não <code>localhost</code>), e quem escaneia
+            precisa estar na mesma rede.</p>
+        </div>
+      </div>
+
+      <div class="card" style="animation-delay:.15s">
+        <div class="card-top"><span class="rid">RF5</span><span class="badge b-ess">Essencial</span></div>
+        <h3>Tela de consulta do produto</h3>
+        <p class="desc">Página que exibe os dados e as fotos de um produto a partir do seu ID/URL.</p>
+        <div class="field">
+          <div class="field-label l-val"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="20 6 9 17 4 12" />
+            </svg>Como validar</div>
+          <p>Acessar <code>/produtos/:id</code> de um produto existente e ver todas as infos; um ID inexistente mostra
+            erro amigável.</p>
+        </div>
+        <div class="field">
+          <div class="field-label l-att"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z" />
+              <line x1="12" y1="9" x2="12" y2="13" />
+              <line x1="12" y1="17" x2="12" y2="17" />
+            </svg>Atenção</div>
+          <p>Consulta aberta nesta POC (sem login). Cuidar do estado de "produto não encontrado".</p>
+        </div>
+      </div>
+
+      <div class="card" style="animation-delay:.18s">
+        <div class="card-top"><span class="rid">RF6</span><span class="badge b-imp">Importante</span></div>
+        <h3>QR Code para impressão</h3>
+        <p class="desc">Disponibilizar o QR Code em PNG/SVG para imprimir como etiqueta do produto.</p>
+        <div class="field">
+          <div class="field-label l-val"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="20 6 9 17 4 12" />
+            </svg>Como validar</div>
+          <p>Baixar o arquivo, imprimir e conferir que o scan continua legível após impresso.</p>
+        </div>
+        <div class="field">
+          <div class="field-label l-att"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z" />
+              <line x1="12" y1="9" x2="12" y2="13" />
+              <line x1="12" y1="17" x2="12" y2="17" />
+            </svg>Atenção</div>
+          <p>SVG escala melhor na impressão; definir tamanho mínimo da etiqueta para o scan funcionar.</p>
+        </div>
+      </div>
+
+      <div class="card" style="animation-delay:.21s">
+        <div class="card-top"><span class="rid">RF7</span><span class="badge b-ess">Essencial</span></div>
+        <h3>Validação de dados na API</h3>
+        <p class="desc">A API valida tipos e campos obrigatórios antes de gravar o produto.</p>
+        <div class="field">
+          <div class="field-label l-val"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="20 6 9 17 4 12" />
+            </svg>Como validar</div>
+          <p>Enviar um payload inválido via <code>POST</code> e receber erro <code>4xx</code> com mensagem clara.</p>
+        </div>
+        <div class="field">
+          <div class="field-label l-att"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z" />
+              <line x1="12" y1="9" x2="12" y2="13" />
+              <line x1="12" y1="17" x2="12" y2="17" />
+            </svg>Atenção</div>
+          <p>Alinhar as regras de validação entre front e back para não divergirem.</p>
+        </div>
+      </div>
+
+      <div class="card" style="animation-delay:.24s">
+        <div class="card-top"><span class="rid">RF8 · bônus</span><span class="badge b-des">Desejável</span></div>
+        <h3>Pipeline de imagens</h3>
+        <p class="desc">Armazenar as imagens fora do banco e servi-las (conexão FTP + infra).</p>
+        <div class="field">
+          <div class="field-label l-val"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="20 6 9 17 4 12" />
+            </svg>Como validar</div>
+          <p>Subir uma imagem e acessá-la pela URL servida, confirmando que persiste.</p>
+        </div>
+        <div class="field">
+          <div class="field-label l-att"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z" />
+              <line x1="12" y1="9" x2="12" y2="13" />
+              <line x1="12" y1="17" x2="12" y2="17" />
+            </svg>Atenção</div>
+          <p>Escopo <i>stretch</i>. Para uma POC local, salvar a imagem direto no volume já resolve — o FTP adiciona
+            complexidade.</p>
+        </div>
+      </div>
+
+      <div class="card" style="animation-delay:.27s">
+        <div class="card-top"><span class="rid">RNF1</span><span class="badge b-imp">Importante</span></div>
+        <h3>Arquitetura monorepo</h3>
+        <p class="desc">Front-end e back-end organizados num único repositório.</p>
+        <div class="field">
+          <div class="field-label l-val"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="20 6 9 17 4 12" />
+            </svg>Como validar</div>
+          <p>Clonar o repositório e rodar front + back a partir dele, seguindo o setup documentado.</p>
+        </div>
+        <div class="field">
+          <div class="field-label l-att"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z" />
+              <line x1="12" y1="9" x2="12" y2="13" />
+              <line x1="12" y1="17" x2="12" y2="17" />
+            </svg>Atenção</div>
+          <p>Definir estrutura de pastas (ex.: <code>/frontend</code>, <code>/backend</code>) e scripts de execução.</p>
+        </div>
+      </div>
+
+      <div class="card" style="animation-delay:.30s">
+        <div class="card-top"><span class="rid">RNF2</span><span class="badge b-imp">Importante</span></div>
+        <h3>Containerização com Docker</h3>
+        <p class="desc">Aplicação executável via Docker / docker-compose.</p>
+        <div class="field">
+          <div class="field-label l-val"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="20 6 9 17 4 12" />
+            </svg>Como validar</div>
+          <p>Um <code>docker compose up</code> sobe o ambiente completo e funcional.</p>
+        </div>
+        <div class="field">
+          <div class="field-label l-att"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z" />
+              <line x1="12" y1="9" x2="12" y2="13" />
+              <line x1="12" y1="17" x2="12" y2="17" />
+            </svg>Atenção</div>
+          <p>Persistir o arquivo SQLite e as imagens em volume para não perdê-los ao recriar o container.</p>
+        </div>
+      </div>
+
+      <div class="card" style="animation-delay:.33s">
+        <div class="card-top"><span class="rid">RNF3</span><span class="badge b-ess">Essencial</span></div>
+        <h3>Schema padronizado e IDs únicos</h3>
+        <p class="desc">Modelo de dados com campos padronizados e um identificador único por produto.</p>
+        <div class="field">
+          <div class="field-label l-val"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="20 6 9 17 4 12" />
+            </svg>Como validar</div>
+          <p>Cadastrar dois produtos e confirmar que recebem IDs distintos e sem colisão.</p>
+        </div>
+        <div class="field">
+          <div class="field-label l-att"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z" />
+              <line x1="12" y1="9" x2="12" y2="13" />
+              <line x1="12" y1="17" x2="12" y2="17" />
+            </svg>Atenção</div>
+          <p>Autoincremento vs UUID. Para a POC, autoincremento já basta; UUID deixa a URL menos previsível, se
+            importar.</p>
+        </div>
+      </div>
+
+      <div class="card" style="animation-delay:.36s">
+        <div class="card-top"><span class="rid">RNF4</span><span class="badge b-imp">Importante</span></div>
+        <h3>Deploy local e teste end-to-end</h3>
+        <p class="desc">Ambiente hospedado localmente, com o fluxo completo testado ponta a ponta.</p>
+        <div class="field">
+          <div class="field-label l-val"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="20 6 9 17 4 12" />
+            </svg>Como validar</div>
+          <p>Rodar o fluxo cadastro → salvar → gerar QR → escanear → consultar sem falhas.</p>
+        </div>
+        <div class="field">
+          <div class="field-label l-att"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z" />
+              <line x1="12" y1="9" x2="12" y2="13" />
+              <line x1="12" y1="17" x2="12" y2="17" />
+            </svg>Atenção</div>
+          <p>Combinar a "definição de pronto" (DoD) do fluxo antes de testar.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</body>
+
+</html>
