@@ -6,7 +6,7 @@ services:
   backend:
     build:
       context: ./api
-      dockerfile: ../docker/api.Dockerfile
+      # dockerfile: ../docker/api.Dockerfile
     environment:
       - PORT=3000
       - DATABASE_URL=file:/data/db/dev.db # SQLite em volume nomeado

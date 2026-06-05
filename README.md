@@ -79,19 +79,13 @@ Portas e URL da API têm defaults no `docker-compose.yml`. Para customizar, copi
 /
 ├── api/                 # API Node + Express + Prisma + SQLite
 │   ├── prisma/          # schema.prisma
-│   └── src/             # app.js, server.js, routes, controllers, services, database
+│   ├── src/             # app.js, server.js, routes, controllers, services, database
+│   └── Dockerfile             
 ├── frontend/            # app Vue 3 + Vite (hello world)
 │   ├── src/             # main.js, App.vue
 │   └── Dockerfile
-├── docker/
-│   └── api.Dockerfile   # Dockerfile da API
 ├── docker-compose.yml
 ├── .env.example
 ├── .gitignore
 └── README.md
 ```
-
-> O `Dockerfile` da API fica em `docker/api.Dockerfile` (e não dentro de `api/`)
-> de propósito
-
-TODO // mover a estrutura pra dentro da pasta api
