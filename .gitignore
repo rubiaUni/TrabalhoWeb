@@ -18,3 +18,9 @@ api/src/generated/
 # SO / editores
 .DS_Store
 *.log
+
+# Conteudo de runtime dos volumes
+data/db/*
+!data/db/.gitkeep
+data/uploads/*
+!data/uploads/.gitkeep
