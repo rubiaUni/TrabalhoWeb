@@ -1,0 +1,45 @@
+# Sobe o ambiente inteiro (API existente + frontend) com um unico
+# `docker compose up`. Portas, URL da API e caminho do banco sao
+# configuraveis por variaveis de ambiente (ver .env.example).
+
+services:
+  backend:
+    build:
+      context: ./api
+      dockerfile: ../docker/api.Dockerfile
+    environment:
+      - PORT=3000
+      - DATABASE_URL=file:/data/db/dev.db # SQLite em volume nomeado
+    ports:
+      - "${BACKEND_PORT:-3000}:3000"
+    volumes:
+      - db-data:/data/db # arquivo SQLite persistente
+      - uploads-data:/data/uploads # placeholder p/ fotos (ainda nao usado)
+    networks:
+      - app-net
+
+  frontend:
+    build:
+      context: ./frontend
+    environment:
+      - PORT=5173
+      # Caminho que o BROWSER usa (same-origin); o dev server faz proxy.
+      - VITE_API_URL=${VITE_API_URL:-/api}
+      # Alvo do proxy (server-side), pelo nome do servico na rede Docker.
+      - API_PROXY_TARGET=http://backend:3000
+    ports:
+      - "${FRONTEND_PORT:-5173}:5173"
+    volumes:
+      - ./frontend:/app # codigo montado p/ hot reload (dev)
+      - /app/node_modules # preserva node_modules do container
+    depends_on:
+      - backend
+    networks:
+      - app-net
+
+volumes:
+  db-data:
+  uploads-data:
+
+networks:
+  app-net:
