@@ -9,7 +9,7 @@ services:
       # dockerfile: ../docker/api.Dockerfile
     environment:
       - PORT=3000
-      - DATABASE_URL=file:/data/db/dev.db # SQLite em volume nomeado
+      - DATABASE_URL=file:/data/db/dev.db # SQLite (bind-mount em ./data/db)
     ports:
       - "${BACKEND_PORT:-3000}:3000"
     volumes:
@@ -37,10 +37,6 @@ services:
       - backend
     networks:
       - app-net
-
-volumes:
-  db-data:
-  uploads-data:
 
 networks:
   app-net:
