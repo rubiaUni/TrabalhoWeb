@@ -13,8 +13,18 @@ datasource db {
 }
 
 model Notebook {
-  id        Int      @id @default(autoincrement())
-  brand     String 
-  model     String 
+  id                Int      @id @default(autoincrement())
+  brand             String 
+  line              String
+  model             String
+  processor         String
+  threads           String
+  ram               String
+  maxcap            String
+  storage           String
+  graphicCard       String
+  display           String
+  operationalSystem String
+  price             String
   timestamp DateTime @default(now())
 }
