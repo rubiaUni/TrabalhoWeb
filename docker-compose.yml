@@ -13,14 +13,9 @@ services:
     ports:
       - "${BACKEND_PORT:-3000}:3000"
     volumes:
-      - ./api:/app # codigo da API montado p/ hot reload (dev)
-      - /app/node_modules # preserva as deps instaladas na imagem
-      - /app/src/generated # preserva o Prisma Client gerado no build
-      - ./data/db:/data/db # SQLite persistido no host (./data/db)
-      - ./data/uploads:/data/uploads # uploads de fotos no host (./data/uploads)
-    # Override do CMD da imagem: aplica o schema e sobe o server em watch mode.
-    # node --watch reinicia o processo ao salvar qualquer arquivo do api/.
-    command: sh -c "npx prisma db push --accept-data-loss && node --watch src/server.js"
+      - db-data:/data/db # arquivo SQLite persistente
+      # - ./api:/app
+      - uploads-data:/data/uploads # placeholder p/ fotos (ainda nao usado)
     networks:
       - app-net
 
