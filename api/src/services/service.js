@@ -8,7 +8,17 @@ export const createNotebookService = async (brand, model) => {
     const newNotebook = await prisma.notebook.create({
         data: {
             brand,
+            line,
             model,
+            processor,
+            threads,
+            ram,
+            maxcap,
+            storage,
+            graphicCard,
+            display,
+            operationalSystem,
+            price
         },
     });
 

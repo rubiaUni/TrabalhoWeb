@@ -21,7 +21,7 @@ export const createNotebook = async (req, res) => {
         if (!brand || !model) {
             return res.status(400).json({ error: 'Brand and model are required' });
         }
-        const newNotebook = await createNotebookService(brand, model);
+        const newNotebook = await createNotebookService(brand, model, processor, threads, ram, maxcap, storage, graphicCard, display, operationalSystem, price);
         res.status(201).json(newNotebook);
     } catch (error) {
         res.status(500).json({ error: 'Error creating notebook' });
