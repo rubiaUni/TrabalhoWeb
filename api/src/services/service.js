@@ -4,7 +4,7 @@ export const getAllNotebooksService = async () => {
     return await prisma.notebook.findMany();
 };
 
-export const createNotebookService = async (brand, model) => {
+export const createNotebookService = async (brand, line, model, processor, threads, ram, maxcap, storage, graphicCard, display, operationalSystem, price) => {
     const newNotebook = await prisma.notebook.create({
         data: {
             brand,
