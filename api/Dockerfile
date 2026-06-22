@@ -13,7 +13,7 @@ WORKDIR /app
 
 # Dependencias primeiro (cache de camadas). Contexto de build = ./api.
 COPY package.json package-lock.json ./
-RUN npm ci
+RUN npm install
 
 # A config do Prisma (prisma.config.ts) faz `import "dotenv/config"`, mas o
 # pacote nao esta no package.json deles. Instalamos so na imagem, sem alterar
