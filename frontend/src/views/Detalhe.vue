@@ -51,8 +51,31 @@ async function remover() {
         <tr><th>Garantia</th><td>{{ n.coverageMonths ? n.coverageMonths+' meses' : '-' }}</td></tr>
       </table>
 
-      <router-link :to="`/${n.id}/editar`">Editar</router-link>
-      <button @click="remover" style="margin-left:1rem">Excluir</button>
+      <div v-if="n.images?.length" style="margin-top:1.5rem">
+        <h3>Fotos</h3>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <img
+            v-for="img in n.images"
+            :key="img.id"
+            :src="`/api/uploads/${img.filename}`"
+            style="max-width:200px;max-height:150px;object-fit:cover;border-radius:4px"
+          />
+        </div>
+      </div>
+
+      <div style="margin-top:1.5rem">
+        <h3>QR Code</h3>
+        <img
+          :src="`/api/notebooks/${n.id}/qrcode`"
+          alt="QR Code"
+          style="width:160px;height:160px"
+        />
+      </div>
+
+      <div style="margin-top:1rem">
+        <router-link :to="`/${n.id}/editar`">Editar</router-link>
+        <button @click="remover" style="margin-left:1rem">Excluir</button>
+      </div>
     </div>
   </main>
 </template>
