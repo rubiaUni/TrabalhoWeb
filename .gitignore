@@ -24,3 +24,6 @@ data/db/*
 !data/db/.gitkeep
 data/uploads/*
 !data/uploads/.gitkeep
+AGENTS.md
+context.md
+.issues/*
