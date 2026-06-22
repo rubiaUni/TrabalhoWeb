@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import QRCode from 'qrcode';
 import prisma from '../database/prisma.js';
 
 const router = Router();
@@ -55,6 +56,19 @@ router.put('/:id', async (req, res) => {
   } catch (err) {
     if (err?.code === 'P2025') return res.status(404).json({ error: 'Notebook not found' });
     res.status(500).json({ error: 'Error updating notebook' });
+  }
+});
+
+router.get('/:id/qrcode', async (req, res) => {
+  try {
+    const notebook = await prisma.notebook.findUnique({ where: { id: Number(req.params.id) } });
+    if (!notebook) return res.status(404).json({ error: 'Notebook not found' });
+    const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
+    const url = `${frontendUrl}/${req.params.id}`;
+    res.setHeader('Content-Type', 'image/png');
+    QRCode.toFileStream(res, url);
+  } catch {
+    res.status(500).json({ error: 'Erro ao gerar QR Code' });
   }
 });
 

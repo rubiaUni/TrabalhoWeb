@@ -1,7 +1,7 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { notebooks, categories } from '../services/api.js';
+import { notebooks, categories, uploads } from '../services/api.js';
 
 const route = useRoute();
 const router = useRouter();
@@ -19,6 +19,7 @@ const f = ref({
   batteryMWh: null, batteryHealth: null,
   coverageMonths: null,
 });
+const foto = ref(null);
 const loading = ref(false);
 const error = ref('');
 
@@ -30,12 +31,21 @@ onMounted(async () => {
   }
 });
 
+function onFotoChange(e) {
+  foto.value = e.target.files[0] || null;
+}
+
 async function salvar() {
   error.value = '';
   loading.value = true;
   try {
-    if (editId) await notebooks.update(editId, f.value);
-    else await notebooks.create(f.value);
+    if (editId) {
+      await notebooks.update(editId, f.value);
+      if (foto.value) await uploads.create(Number(editId), foto.value);
+    } else {
+      const nb = await notebooks.create(f.value);
+      if (foto.value) await uploads.create(nb.id, foto.value);
+    }
     router.push('/');
   } catch (e) {
     error.value = e.message;
@@ -94,6 +104,10 @@ async function salvar() {
         <label>Bateria mWh <input v-model="f.batteryMWh" type="number"/></label>
         <label>Saúde % <input v-model="f.batteryHealth" type="number"/></label>
         <label>Garantia meses <input v-model="f.coverageMonths" type="number"/></label>
+      </fieldset>
+      <fieldset>
+        <legend>Foto</legend>
+        <label>Adicionar foto <input type="file" accept="image/*" @change="onFotoChange"/></label>
       </fieldset>
       <p v-if="error" style="color:crimson">{{ error }}</p>
       <button :disabled="loading">{{ loading ? 'Salvando...' : 'Salvar' }}</button>
