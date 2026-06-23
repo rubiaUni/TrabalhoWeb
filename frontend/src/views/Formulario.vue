@@ -84,15 +84,15 @@ async function salvar() {
         <div class="form-grid">
           <label>Marca <input v-model="f.cpuBrand" /></label>
           <label>Modelo <input v-model="f.cpuModel" /></label>
-          <label>Cores <input v-model="f.cpuCores" type="number" /></label>
-          <label>Threads <input v-model="f.cpuThreads" type="number" /></label>
+          <label>Cores <input v-model="f.cpuCores" type="number" min="0"/></label>
+          <label>Threads <input v-model="f.cpuThreads" type="number" min="0"/></label>
         </div>
       </fieldset>
 
       <fieldset>
         <legend>RAM</legend>
         <div class="form-grid">
-          <label>GB <input v-model="f.ramGb" type="number" /></label>
+          <label>GB <input v-model="f.ramGb" type="number" min="0"/></label>
           <label>Tipo <input v-model="f.ramType" /></label>
         </div>
       </fieldset>
@@ -100,7 +100,7 @@ async function salvar() {
       <fieldset>
         <legend>Armazenamento</legend>
         <div class="form-grid">
-          <label>GB <input v-model="f.storageGb" type="number" /></label>
+          <label>GB <input v-model="f.storageGb" type="number" min="0"/></label>
           <label>Tipo <input v-model="f.storageType" /></label>
         </div>
       </fieldset>
@@ -109,14 +109,14 @@ async function salvar() {
         <legend>GPU</legend>
         <div class="form-grid">
           <label>Modelo <input v-model="f.gpuModel" /></label>
-          <label>VRAM (GB) <input v-model="f.gpuVramGb" type="number" /></label>
+          <label>VRAM (GB) <input v-model="f.gpuVramGb" type="number" min="0"/></label>
         </div>
       </fieldset>
 
       <fieldset>
         <legend>Tela</legend>
         <div class="form-grid">
-          <label>Polegadas <input v-model="f.displaySize" type="number" step="0.1" /></label>
+          <label>Polegadas <input v-model="f.displaySize" type="number" step="0.1" min="0"/></label>
           <label>Painel <input v-model="f.displayPanel" /></label>
         </div>
       </fieldset>
@@ -125,9 +125,9 @@ async function salvar() {
         <legend>SO / Bateria / Garantia</legend>
         <div class="form-grid">
           <label>Sistema operacional <input v-model="f.osName" /></label>
-          <label>Bateria (mWh) <input v-model="f.batteryMWh" type="number" /></label>
-          <label>Saúde (%) <input v-model="f.batteryHealth" type="number" /></label>
-          <label>Garantia (meses) <input v-model="f.coverageMonths" type="number" /></label>
+          <label>Bateria (mWh) <input v-model="f.batteryMWh" type="number" min="0"/></label>
+          <label>Saúde (%) <input v-model="f.batteryHealth" type="number" min="0"/></label>
+          <label>Garantia (meses) <input v-model="f.coverageMonths" type="number" min="0"/></label>
         </div>
       </fieldset>
 
