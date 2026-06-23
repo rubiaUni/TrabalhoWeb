@@ -149,6 +149,9 @@ td {
   padding: .75rem 1rem;
   border-top: 1px solid var(--c-border);
   font-size: .9rem;
+  overflow-wrap: break-word;
+  word-break: break-all;
+  width: 150px;
 }
 tbody tr:hover { background: #f8fafc; }
 
