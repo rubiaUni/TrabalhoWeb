@@ -1,73 +1,70 @@
-# TrabalhoWeb
+# Catálogo de Notebooks
 
-Trabalho em grupo 2026/1 — POC interna de um **catálogo de produtos**.
-
-Esta etapa é apenas o **scaffold**: provar que o ambiente inteiro sobe via Docker,
-com frontend e backend conversando e os dados persistindo em volumes. A lógica de
-negócio ainda é placeholder (marcada com `// TODO:`). Sem autenticação.
+POC de um catálogo web para listar, gerenciar e documentar notebooks com fotos e QR codes.
 
 ## Stack
 
-- **Frontend:** Vue 3 + Vite (modo dev)
-- **Backend / API:** Node.js + **Express** + Prisma (pasta `api/`)
-- **Banco:** SQLite (arquivo, acessado pelo backend via Prisma)
-- **Orquestração:** Docker + Docker Compose
-- **Arquitetura:** monorepo (front e back no mesmo repositório)
+- **Frontend:** Vue 3 + Vite (com HMR)
+- **Backend / API:** Node.js + Express + Prisma
+- **Banco:** SQLite (persistido em volume Docker)
+- **Orquestração:** Docker Compose
 
 ## Pré-requisitos
 
 - [Docker](https://docs.docker.com/get-docker/)
-- Docker Compose (já incluso no Docker Desktop / `docker compose`)
+- Docker Compose
 
 ## Como subir
 
-Na primeira vez (constrói as imagens):
+**Primeira vez (constrói as imagens):**
 
 ```bash
 docker compose up --build -d
 ```
 
-Nas próximas:
+**Próximas vezes:**
 
 ```bash
 docker compose up -d
 ```
 
-### URLs de acesso
+Acesse:
+- **Frontend:** http://localhost:5173
+- **API:** http://localhost:3000
 
-- **Frontend:** http://localhost:5173 — abre no navegador e exibe a resposta do
-  `GET /` da API, provando que front e back estão conversando.
-- **Backend / API:** http://localhost:3000
-  - `GET /` → `{ "message": "API is running!" }`
-  - `POST /notebooks` → cria um registro (`{ "brand": "...", "model": "..." }`)
+O banco é populado automaticamente com dados de exemplo (3 categorias, 3 notebooks).
 
+## Funcionalidades
+
+- ✅ **Listagem de notebooks** — tabela com marca, modelo, CPU, RAM e categoria
+- ✅ **Criar/editar/deletar notebooks** — formulário com especificações detalhadas
+- ✅ **Gerenciar categorias** — criar, editar e deletar categorias
+- ✅ **Upload de fotos** — cada notebook pode ter múltiplas fotos
+- ✅ **QR Code** — cada notebook gera um QR code que aponta para sua página (útil para compartilhar)
+- ✅ **UI limpa** — nav bar, cards, tabelas estilizadas, inputs responsivos
 
 ## Desenvolvimento (hot reload)
 
-Os dois serviços recarregam automaticamente ao salvar — **não precisa rebuildar**
-para o dia a dia:
-
-- **Frontend** (`frontend/`): HMR do Vite. Edite e salve; o navegador atualiza sozinho.
-- **Backend** (`api/`): o container monta o código via bind-mount e roda
-  `node --watch`. Ao salvar qualquer `.js` em `api/src/`, o servidor reinicia sozinho
-  (ex.: `Restarting 'src/server.js'`).
-
-Basta deixar rodando:
+Ao salvar, ambos recarregam automaticamente — **sem rebuild**:
 
 ```bash
 docker compose up
 ```
 
-> **Mudou `api/prisma/schema.prisma`?** Aí sim é preciso regenerar o Prisma Client e
-> aplicar o schema (o `node --watch` não faz isso). Rode:
+- **Frontend:** HMR do Vite (reload automático no browser)
+- **Backend:** `node --watch` (restart ao salvar `.js` em `api/src/`)
+
+> **Alterou `api/prisma/schema.prisma`?**
 > ```bash
 > docker compose exec backend npx prisma generate
-> docker compose restart backend   # re-aplica o schema (db push) e sobe o server
+> docker compose restart backend
 > ```
 
-> **Editou `docker-compose.yml` ou `*/Dockerfile`?** Esses não são hot-reload —
-> recrie com `docker compose up -d` (ou `--build` se mexeu no Dockerfile).
-
+> **Alterou `docker-compose.yml` ou `*/Dockerfile`?**
+> ```bash
+> docker compose down
+> docker compose up --build -d
+> ```
 
 ## Como parar
 
@@ -75,55 +72,91 @@ docker compose up
 docker compose down
 ```
 
-## Onde os dados persistem (host)
+## Dados persistem em volumes
 
-Os dados são montados em **bind-mount** na pasta `./data` do projeto, então ficam
-visíveis no host e sobrevivem a qualquer `docker compose down` + `up`:
+- **Banco:** `db-data` (SQLite)
+- **Uploads:** `uploads-data` (fotos dos notebooks)
 
-- `./data/db/dev.db` → arquivo SQLite do backend (montado em `/data/db` no container)
-- `./data/uploads/` → uploads de imagens (montado em `/data/uploads`) — **placeholder**,
-  já provisionado para uso futuro (fotos dos produtos)
-
-> Os arquivos gerados em runtime (`dev.db`, fotos) são criados pelo container (root) e
-> ficam **fora do git** (`.gitignore`); só os `.gitkeep` das pastas são versionados.
-
-### Resetar o estado (apaga os dados)
-
-Como agora é bind-mount no host, `down -v` **não** apaga o banco. Apague os arquivos:
+Para resetar (apaga dados):
 
 ```bash
-docker compose down
-rm -f data/db/dev.db data/db/dev.db-*   # pode exigir sudo (arquivo é root)
-rm -rf data/uploads/*                   # mantém a pasta e o .gitkeep
+docker compose down -v
 ```
 
 ## Configuração (opcional)
 
-Portas e URL da API têm defaults no `docker-compose.yml`. Para customizar, copie
-`.env.example` para `.env` e ajuste:
+Copie `.env.example` para `.env` e customize:
 
-| Variável        | Default | Descrição                                      |
-|-----------------|---------|------------------------------------------------|
-| `BACKEND_PORT`  | `3000`  | Porta da API no host                           |
-| `FRONTEND_PORT` | `5173`  | Porta do frontend no host                      |
-| `VITE_API_URL`  | `/api`  | Caminho base da API usado pelo browser (proxy) |
+| Variável        | Default              | Descrição                       |
+|-----------------|----------------------|---------------------------------|
+| `BACKEND_PORT`  | `3000`               | Porta da API                    |
+| `FRONTEND_PORT` | `5173`               | Porta do frontend               |
+| `VITE_API_URL`  | `/api`               | URL da API no browser (proxy)   |
+| `FRONTEND_URL`  | `http://localhost:5173` | URL do frontend (para QR code)  |
 
-## Estrutura de pastas
+Para testar QR code no celular:
+```bash
+# .env
+FRONTEND_URL=http://<seu-ip-local>:5173
+
+docker compose down
+docker compose up --build -d
+```
+
+O QR code gerado na página de detalhe do notebook apontará para `http://<seu-ip-local>:5173/{id}`.
+
+## Estrutura
 
 ```
-/
-├── api/                 # API Node + Express + Prisma + SQLite
-│   ├── prisma/          # schema.prisma
-│   ├── src/             # app.js, server.js, routes, controllers, services, database
+.
+├── api/
+│   ├── src/
+│   │   ├── app.js         # Express setup
+│   │   ├── server.js      # Entry point
+│   │   └── routes/        # Notebooks, categories, uploads
+│   ├── prisma/
+│   │   ├── schema.prisma  # Schema Notebook, Category, NotebookImage
+│   │   └── seed.js        # Dados iniciais
+│   ├── package.json
 │   └── Dockerfile
-├── data/                # dados persistidos no host (bind-mount; conteúdo fora do git)
-│   ├── db/              # dev.db (SQLite)
-│   └── uploads/         # fotos enviadas (placeholder)
-├── frontend/            # app Vue 3 + Vite (hello world)
-│   ├── src/             # main.js, App.vue
+├── frontend/
+│   ├── src/
+│   │   ├── views/         # Lista, Detalhe, Formulario, Categorias
+│   │   ├── services/      # API client
+│   │   ├── assets/        # CSS global
+│   │   ├── router/        # Vue Router 4
+│   │   ├── App.vue
+│   │   └── main.js
+│   ├── package.json
 │   └── Dockerfile
 ├── docker-compose.yml
 ├── .env.example
-├── .gitignore
 └── README.md
 ```
+
+## API Endpoints
+
+### Notebooks
+
+- `GET /api/notebooks` — listar todos
+- `GET /api/notebooks/:id` — detalhe + fotos
+- `GET /api/notebooks/:id/qrcode` — QR code (PNG)
+- `POST /api/notebooks` — criar
+- `PUT /api/notebooks/:id` — editar
+- `DELETE /api/notebooks/:id` — deletar
+
+### Categorias
+
+- `GET /api/categories` — listar
+- `POST /api/categories` — criar
+- `PUT /api/categories/:id` — editar
+- `DELETE /api/categories/:id` — deletar
+
+### Uploads
+
+- `POST /api/uploads` — enviar foto (multipart/form-data: notebookId + file)
+- `DELETE /api/uploads/:id` — deletar foto
+
+## License
+
+Trabalho acadêmico.

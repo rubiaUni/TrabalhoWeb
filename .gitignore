@@ -27,3 +27,4 @@ data/uploads/*
 AGENTS.md
 context.md
 .issues/*
+.env
