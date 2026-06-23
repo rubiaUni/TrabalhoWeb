@@ -30,4 +30,4 @@ EXPOSE 3000
 
 # Em runtime: cria/atualiza o schema no arquivo SQLite (que vive num volume),
 # popula com dados iniciais (idempotente) e sobe o servidor.
-CMD ["sh", "-c", "npx prisma db push --accept-data-loss && npx prisma db seed && node src/server.js"]
+CMD ["sh", "-c", "npx prisma db push --accept-data-loss && node prisma/seed.js && node src/server.js"]
