@@ -28,6 +28,6 @@ RUN npx prisma generate
 
 EXPOSE 3000
 
-# Em runtime: cria/atualiza o schema no arquivo SQLite (que vive num volume)
-# e sobe o servidor. `db push` e idempotente e sobrevive a down + up.
-CMD ["sh", "-c", "npx prisma db push --accept-data-loss && node src/server.js"]
+# Em runtime: cria/atualiza o schema no arquivo SQLite (que vive num volume),
+# popula com dados iniciais (idempotente) e sobe o servidor.
+CMD ["sh", "-c", "npx prisma db push --accept-data-loss && node prisma/seed.js && node src/server.js"]

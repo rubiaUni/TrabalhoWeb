@@ -7,6 +7,13 @@ const adapter = new PrismaBetterSqlite3({
 const prisma = new PrismaClient({ adapter });
 
 async function seed() {
+  const count = await prisma.notebook.count();
+  if (count > 0) {
+    console.log('Database already seeded, skipping');
+    await prisma.$disconnect();
+    return;
+  }
+
   const cats = await Promise.all([
     prisma.category.create({ data: { name: 'Gaming', description: 'Notebooks para jogos' } }),
     prisma.category.create({ data: { name: 'Office', description: 'Escritório e estudos' } }),
@@ -45,7 +52,10 @@ async function seed() {
   });
 
   await prisma.$disconnect();
-  console.log('Seed ok');
+  console.log('Seed completed');
 }
 
-seed();
+seed().catch(e => {
+  console.error('Seed failed:', e.message);
+  process.exit(1);
+});
