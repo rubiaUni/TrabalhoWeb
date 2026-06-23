@@ -29,7 +29,7 @@ async function salvar() {
 
 function editar(c) { editId.value = c.id; nome.value = c.name; desc.value = c.description || ''; }
 async function remover(id) {
-  if (!confirm('Excluir?')) return;
+  if (!confirm('Excluir categoria?')) return;
   try {
     await categories.delete(id);
     await carregar();
@@ -37,28 +37,62 @@ async function remover(id) {
     error.value = e.message;
   }
 }
+
+function cancelar() { editId.value = null; nome.value = ''; desc.value = ''; }
 </script>
 
 <template>
-  <main>
-    <router-link to="/">Voltar</router-link>
-    <h1>Categorias</h1>
-    <form @submit.prevent="salvar">
-      <label>Nome <input v-model="nome" required/></label>
-      <label>Descrição <input v-model="desc"/></label>
-      <button :disabled="loading">{{ editId ? 'Atualizar' : 'Criar' }}</button>
-      <button v-if="editId" type="button" @click="editId=null; nome=''; desc=''">Cancelar</button>
-    </form>
-    <p v-if="error" style="color:crimson">{{ error }}</p>
-    <table>
-      <thead><tr><th>ID</th><th>Nome</th><th>Descrição</th><th>Qtd</th><th/></tr></thead>
-      <tbody>
-        <tr v-for="c in items" :key="c.id">
-          <td>{{ c.id }}</td><td>{{ c.name }}</td><td>{{ c.description }}</td>
-          <td>{{ c._count?.notebooks || 0 }}</td>
-          <td><button @click="editar(c)">Editar</button> <button @click="remover(c.id)">Excluir</button></td>
-        </tr>
-      </tbody>
-    </table>
+  <main class="container">
+    <div class="page-header">
+      <h1>Categorias</h1>
+    </div>
+
+    <div v-if="error" class="alert-error">{{ error }}</div>
+
+    <div class="card" style="margin-bottom:1.5rem">
+      <p class="card-title">{{ editId ? 'Editar categoria' : 'Nova categoria' }}</p>
+      <form @submit.prevent="salvar">
+        <div class="form-grid">
+          <label>Nome <input v-model="nome" required /></label>
+          <label>Descrição <input v-model="desc" /></label>
+        </div>
+        <div class="row" style="margin-top:1rem">
+          <button class="btn btn-primary" :disabled="loading">
+            {{ loading ? 'Salvando...' : editId ? 'Atualizar' : 'Criar' }}
+          </button>
+          <button v-if="editId" type="button" class="btn btn-outline" @click="cancelar">
+            Cancelar
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Nome</th>
+            <th>Descrição</th>
+            <th>Notebooks</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="c in items" :key="c.id">
+            <td class="text-muted">{{ c.id }}</td>
+            <td>{{ c.name }}</td>
+            <td>{{ c.description || '—' }}</td>
+            <td>{{ c._count?.notebooks || 0 }}</td>
+            <td>
+              <div class="row">
+                <button class="btn btn-ghost" @click="editar(c)">Editar</button>
+                <button class="btn btn-danger" @click="remover(c.id)">Excluir</button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </main>
 </template>

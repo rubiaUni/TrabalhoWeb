@@ -56,61 +56,91 @@ async function salvar() {
 </script>
 
 <template>
-  <main>
-    <router-link to="/">Voltar</router-link>
-    <h1>{{ editId ? 'Editar' : 'Novo' }} Notebook</h1>
+  <main class="container">
+    <router-link to="/" class="back-link">Voltar</router-link>
+    <div class="page-header">
+      <h1>{{ editId ? 'Editar' : 'Novo' }} Notebook</h1>
+    </div>
+
+    <div v-if="error" class="alert-error">{{ error }}</div>
+
     <form @submit.prevent="salvar">
       <fieldset>
         <legend>Dados básicos</legend>
-        <label>Marca <input v-model="f.brand" required/></label>
-        <label>Modelo <input v-model="f.model" required/></label>
-        <label>Categoria
-          <select v-model="f.categoryId">
-            <option :value="null">--</option>
-            <option v-for="c in cats" :key="c.id" :value="c.id">{{ c.name }}</option>
-          </select>
-        </label>
+        <div class="form-grid">
+          <label>Marca <input v-model="f.brand" required /></label>
+          <label>Modelo <input v-model="f.model" required /></label>
+          <label>Categoria
+            <select v-model="f.categoryId">
+              <option :value="null">—</option>
+              <option v-for="c in cats" :key="c.id" :value="c.id">{{ c.name }}</option>
+            </select>
+          </label>
+        </div>
       </fieldset>
+
       <fieldset>
         <legend>Processador</legend>
-        <label>Marca <input v-model="f.cpuBrand"/></label>
-        <label>Modelo <input v-model="f.cpuModel"/></label>
-        <label>Cores <input v-model="f.cpuCores" type="number"/></label>
-        <label>Threads <input v-model="f.cpuThreads" type="number"/></label>
+        <div class="form-grid">
+          <label>Marca <input v-model="f.cpuBrand" /></label>
+          <label>Modelo <input v-model="f.cpuModel" /></label>
+          <label>Cores <input v-model="f.cpuCores" type="number" /></label>
+          <label>Threads <input v-model="f.cpuThreads" type="number" /></label>
+        </div>
       </fieldset>
+
       <fieldset>
         <legend>RAM</legend>
-        <label>GB <input v-model="f.ramGb" type="number"/></label>
-        <label>Tipo <input v-model="f.ramType"/></label>
+        <div class="form-grid">
+          <label>GB <input v-model="f.ramGb" type="number" /></label>
+          <label>Tipo <input v-model="f.ramType" /></label>
+        </div>
       </fieldset>
+
       <fieldset>
         <legend>Armazenamento</legend>
-        <label>GB <input v-model="f.storageGb" type="number"/></label>
-        <label>Tipo <input v-model="f.storageType"/></label>
+        <div class="form-grid">
+          <label>GB <input v-model="f.storageGb" type="number" /></label>
+          <label>Tipo <input v-model="f.storageType" /></label>
+        </div>
       </fieldset>
+
       <fieldset>
         <legend>GPU</legend>
-        <label>Modelo <input v-model="f.gpuModel"/></label>
-        <label>VRAM GB <input v-model="f.gpuVramGb" type="number"/></label>
+        <div class="form-grid">
+          <label>Modelo <input v-model="f.gpuModel" /></label>
+          <label>VRAM (GB) <input v-model="f.gpuVramGb" type="number" /></label>
+        </div>
       </fieldset>
+
       <fieldset>
         <legend>Tela</legend>
-        <label>Polegadas <input v-model="f.displaySize" type="number" step="0.1"/></label>
-        <label>Painel <input v-model="f.displayPanel"/></label>
+        <div class="form-grid">
+          <label>Polegadas <input v-model="f.displaySize" type="number" step="0.1" /></label>
+          <label>Painel <input v-model="f.displayPanel" /></label>
+        </div>
       </fieldset>
+
       <fieldset>
         <legend>SO / Bateria / Garantia</legend>
-        <label>SO <input v-model="f.osName"/></label>
-        <label>Bateria mWh <input v-model="f.batteryMWh" type="number"/></label>
-        <label>Saúde % <input v-model="f.batteryHealth" type="number"/></label>
-        <label>Garantia meses <input v-model="f.coverageMonths" type="number"/></label>
+        <div class="form-grid">
+          <label>Sistema operacional <input v-model="f.osName" /></label>
+          <label>Bateria (mWh) <input v-model="f.batteryMWh" type="number" /></label>
+          <label>Saúde (%) <input v-model="f.batteryHealth" type="number" /></label>
+          <label>Garantia (meses) <input v-model="f.coverageMonths" type="number" /></label>
+        </div>
       </fieldset>
+
       <fieldset>
         <legend>Foto</legend>
-        <label>Adicionar foto <input type="file" accept="image/*" @change="onFotoChange"/></label>
+        <div class="form-grid">
+          <label>Adicionar foto <input type="file" accept="image/*" @change="onFotoChange" /></label>
+        </div>
       </fieldset>
-      <p v-if="error" style="color:crimson">{{ error }}</p>
-      <button :disabled="loading">{{ loading ? 'Salvando...' : 'Salvar' }}</button>
+
+      <button class="btn btn-primary" :disabled="loading">
+        {{ loading ? 'Salvando...' : 'Salvar' }}
+      </button>
     </form>
   </main>
 </template>

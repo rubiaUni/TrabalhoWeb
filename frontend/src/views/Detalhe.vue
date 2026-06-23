@@ -20,7 +20,7 @@ onMounted(async () => {
 });
 
 async function remover() {
-  if (!confirm('Excluir?')) return;
+  if (!confirm('Excluir este notebook?')) return;
   try {
     await notebooks.delete(route.params.id);
     router.push('/');
@@ -31,50 +31,79 @@ async function remover() {
 </script>
 
 <template>
-  <main>
-    <router-link to="/">Voltar</router-link>
-    <p v-if="loading">Carregando...</p>
-    <p v-else-if="error" style="color:crimson">{{ error }}</p>
-    <div v-else-if="!n"><p>Notebook não encontrado.</p></div>
+  <main class="container">
+    <router-link to="/" class="back-link">Voltar</router-link>
+
+    <p v-if="loading" class="text-muted">Carregando...</p>
+    <div v-else-if="error" class="alert-error">{{ error }}</div>
+    <div v-else-if="!n" class="text-muted">Notebook não encontrado.</div>
     <div v-else>
-      <h1>{{ n.brand }} {{ n.model }}</h1>
+      <div class="page-header">
+        <h1>{{ n.brand }} {{ n.model }}</h1>
+        <div class="row">
+          <router-link :to="`/${n.id}/editar`" class="btn btn-outline">Editar</router-link>
+          <button class="btn btn-danger" @click="remover">Excluir</button>
+        </div>
+      </div>
 
-      <table>
-        <tr><th>Categoria</th><td>{{ n.category?.name || '-' }}</td></tr>
-        <tr><th>Processador</th><td>{{ n.cpuBrand }} {{ n.cpuModel }} ({{ n.cpuCores }}c/{{ n.cpuThreads }}t)</td></tr>
-        <tr><th>RAM</th><td>{{ n.ramGb }}GB {{ n.ramType || '' }}</td></tr>
-        <tr><th>Armazenamento</th><td>{{ n.storageGb }}GB {{ n.storageType || '' }}</td></tr>
-        <tr><th>GPU</th><td>{{ n.gpuModel || '-' }} {{ n.gpuVramGb ? '('+n.gpuVramGb+'GB)' : '' }}</td></tr>
-        <tr><th>Tela</th><td>{{ n.displaySize || '' }}" {{ n.displayPanel || '' }}</td></tr>
-        <tr><th>SO</th><td>{{ n.osName || '-' }}</td></tr>
-        <tr><th>Bateria</th><td>{{ n.batteryMWh ? n.batteryMWh+'mWh' : '-' }} / Saúde {{ n.batteryHealth || '-' }}%</td></tr>
-        <tr><th>Garantia</th><td>{{ n.coverageMonths ? n.coverageMonths+' meses' : '-' }}</td></tr>
-      </table>
+      <div class="card">
+        <p class="card-title">Especificações</p>
+        <dl class="dl-grid">
+          <dt>Categoria</dt>
+          <dd>{{ n.category?.name || '—' }}</dd>
 
-      <div v-if="n.images?.length" style="margin-top:1.5rem">
-        <h3>Fotos</h3>
-        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <dt>Processador</dt>
+          <dd>{{ n.cpuBrand }} {{ n.cpuModel }}
+            <span v-if="n.cpuCores" class="text-muted">({{ n.cpuCores }}c/{{ n.cpuThreads }}t)</span>
+          </dd>
+
+          <dt>RAM</dt>
+          <dd>{{ n.ramGb ? n.ramGb + ' GB' : '—' }} {{ n.ramType || '' }}</dd>
+
+          <dt>Armazenamento</dt>
+          <dd>{{ n.storageGb ? n.storageGb + ' GB' : '—' }} {{ n.storageType || '' }}</dd>
+
+          <dt>GPU</dt>
+          <dd>{{ n.gpuModel || '—' }}
+            <span v-if="n.gpuVramGb" class="text-muted">({{ n.gpuVramGb }} GB)</span>
+          </dd>
+
+          <dt>Tela</dt>
+          <dd>{{ n.displaySize ? n.displaySize + '"' : '—' }} {{ n.displayPanel || '' }}</dd>
+
+          <dt>Sistema operacional</dt>
+          <dd>{{ n.osName || '—' }}</dd>
+
+          <dt>Bateria</dt>
+          <dd>
+            {{ n.batteryMWh ? n.batteryMWh + ' mWh' : '—' }}
+            <span v-if="n.batteryHealth" class="text-muted">· Saúde {{ n.batteryHealth }}%</span>
+          </dd>
+
+          <dt>Garantia</dt>
+          <dd>{{ n.coverageMonths ? n.coverageMonths + ' meses' : '—' }}</dd>
+        </dl>
+      </div>
+
+      <div v-if="n.images?.length" class="card">
+        <p class="card-title">Fotos</p>
+        <div class="photo-gallery">
           <img
             v-for="img in n.images"
             :key="img.id"
             :src="`/api/uploads/${img.filename}`"
-            style="max-width:200px;max-height:150px;object-fit:cover;border-radius:4px"
+            :alt="n.model"
           />
         </div>
       </div>
 
-      <div style="margin-top:1.5rem">
-        <h3>QR Code</h3>
+      <div class="card">
+        <p class="card-title">QR Code</p>
         <img
           :src="`/api/notebooks/${n.id}/qrcode`"
           alt="QR Code"
-          style="width:160px;height:160px"
+          class="qr-img"
         />
-      </div>
-
-      <div style="margin-top:1rem">
-        <router-link :to="`/${n.id}/editar`">Editar</router-link>
-        <button @click="remover" style="margin-left:1rem">Excluir</button>
       </div>
     </div>
   </main>

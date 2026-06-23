@@ -18,29 +18,45 @@ onMounted(async () => {
 </script>
 
 <template>
-  <main>
-    <h1>Notebooks</h1>
-    <router-link to="/novo">+ Novo</router-link>
-    <router-link to="/categorias" style="margin-left:1rem">Categorias</router-link>
+  <main class="container">
+    <div class="page-header">
+      <h1>Notebooks</h1>
+      <router-link to="/novo" class="btn btn-primary">+ Novo</router-link>
+    </div>
 
-    <p v-if="loading">Carregando...</p>
-    <p v-else-if="error" style="color:crimson">{{ error }}</p>
-    <table v-else-if="items.length">
-      <thead><tr><th>#</th><th>Marca</th><th>Modelo</th><th>CPU</th><th>RAM</th><th/></tr></thead>
-      <tbody>
-        <tr v-for="n in items" :key="n.id">
-          <td>{{ n.id }}</td>
-          <td>{{ n.brand }}</td>
-          <td>{{ n.model }}</td>
-          <td>{{ n.cpuBrand || '' }} {{ n.cpuModel || '' }}</td>
-          <td>{{ n.ramGb ? n.ramGb + 'GB' : '-' }}</td>
-          <td>
-            <router-link :to="`/${n.id}`">Ver</router-link>
-            <router-link :to="`/${n.id}/editar`" style="margin-left:.5rem">Editar</router-link>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-    <p v-else>Nenhum notebook cadastrado.</p>
+    <p v-if="loading" class="text-muted">Carregando...</p>
+    <div v-else-if="error" class="alert-error">{{ error }}</div>
+    <div v-else-if="items.length" class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Marca</th>
+            <th>Modelo</th>
+            <th>CPU</th>
+            <th>RAM</th>
+            <th>Categoria</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="n in items" :key="n.id">
+            <td class="text-muted">{{ n.id }}</td>
+            <td>{{ n.brand }}</td>
+            <td>{{ n.model }}</td>
+            <td>{{ [n.cpuBrand, n.cpuModel].filter(Boolean).join(' ') || '—' }}</td>
+            <td>{{ n.ramGb ? n.ramGb + ' GB' : '—' }}</td>
+            <td>{{ n.category?.name || '—' }}</td>
+            <td>
+              <div class="row">
+                <router-link :to="`/${n.id}`" class="btn btn-ghost">Ver</router-link>
+                <router-link :to="`/${n.id}/editar`" class="btn btn-outline">Editar</router-link>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p v-else class="text-muted">Nenhum notebook cadastrado.</p>
   </main>
 </template>
